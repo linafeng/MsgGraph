@@ -22,7 +22,7 @@ def test1(tr3):
         'title': title,
         'sex': sex,
         'age': age,
-        'code': code,
+        'code': '\t'+code,
         'jobs': jobs,
     }
 
@@ -39,22 +39,23 @@ items = soup.select('#ml_001 > table > tbody > tr> td[class*=tc]')
 #         f.write("\n")
 
 ####写入Csv文件中
-with open("executive_prep.csv", 'w') as csvfile:
-        spamwriter = csv.writer(csvfile, dialect='excel')
-        #设置标题
-        # spamwriter.writerow(["游戏账号","用户类型","游戏名称","渠道","充值类型","充值金额","返利金额","单号","日期"])
-        #将CsvData中的数据循环写入到CsvFileName文件中
-        for tr in items:
-            data = test1(tr)
-            # print(next(data))
-            person = next(data)
-            print(type(person))
-            print(person)
-            # spamwriter.writerow(person)
-            fieldnames = ['title', 'sex', 'age', 'code', 'jobs']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerow(person)
+with open("data_analysis/executive_prep.csv", 'w') as csvfile:
+    fieldnames = ['seq', 'title', 'sex', 'age', 'code', 'jobs']
+    spamwriter = csv.writer(csvfile, dialect='excel')
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    # 设置标题
+    # spamwriter.writerow(["游戏账号","用户类型","游戏名称","渠道","充值类型","充值金额","返利金额","单号","日期"])
+    # 将CsvData中的数据循环写入到CsvFileName文件中
+    for i, tr in enumerate(items):
+        data = test1(tr)
+        # print(next(data))
+        person = next(data)
+        print(type(person))
+        print(person)
+        person['seq'] = i
+        # spamwriter.writerow(person)
 
 
 
+        writer.writerow(person)
